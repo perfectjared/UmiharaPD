@@ -1,7 +1,7 @@
 -- luacheck: globals unpack
 local unpack = unpack or table.unpack
 
-local M = {}
+M = {}
 
 M.WILDCARD      = "*"
 M.DEFERRED      = 0

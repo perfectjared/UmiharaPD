@@ -1,8 +1,16 @@
 local gfx = playdate.graphics
 
-gfx.setColor(gfx.kColorBlack)
+import "libraries/fsm"
+local gameState = M:create({
+	initial = "title",
+	events = {
+		{name = "start", from = "title", to = "game"}
+	},
+	callbacks = {
+	on_game = function(self) print("test") end,
+	}
+})
 
 function playdate.update()
-	gfx.fillRect(0, 0, 350, 240)
 	playdate.drawFPS(0,0)
 end
