@@ -1,0 +1,3 @@
+local assets = {}
+
+return assets
