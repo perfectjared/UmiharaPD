@@ -1,8 +1,8 @@
-local gfx <const> = playdate.graphics
-import 'libraries/pdecs'
+__ =
+import 'libraries/underscore'
 
 local play = import('source/scenes/play')
-play.test()
+play.update()
 
 function playdate.update()
 	playdate.drawFPS(0,0)
