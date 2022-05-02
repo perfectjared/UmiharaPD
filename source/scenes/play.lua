@@ -13,21 +13,21 @@ play.entities = {
 		jump = 15,
 		maxSpeed = 10,
 		pos = { x = 200, y = 120 },
+		rotator = {
+			angle = 0,
+			radius = 16
+		},
 		size = 10,
 		speed = 3,
-		state = "",
-		states = {
-			
-		},
 		vel = { x = 0, y = 0, a = 0 }
-	}
+	},
 }
 		
 play.systems = {
 	playerControl = function(e, w)
 		if e.grounded then
 			if playdate.buttonIsPressed(playdate.kButtonUp) then 
-				e.vel.y += e.jump 
+				e.vel.y += e.jump
 			end
 			if playdate.buttonIsPressed(playdate.kButtonLeft) then 
 				e.vel.x = math.max(e.vel.x - e.speed, -e.maxSpeed)			
@@ -61,25 +61,29 @@ play.systems = {
 	playerDraw = function(e)
 		gfx.fillCircleAtPoint(e.pos.x, e.pos.y, e.size / 2)
 	end,
+	rotatorDraw = function(e)
+		gfx.drawCircleAtPoint(e.pos.x, e.pos.y, e.rotator.radius)
+	end,
 	groundDraw = function(w)
 		gfx.drawLine(0, w.ground, 400, w.ground)
 	end,
 	setGrounded = function(e, w)
-		if e.pos.y < (w.ground - (e.size / 2)) then
-			e.grounded = false
+		if e.pos.y >= (w.ground - (e.size / 2)) then
+			e.grounded = true
+			e.vel.y = 0
 		else 
-			e.grounded = true 
+			e.grounded = false
 		end
 	end
 }
 	
 play.update = function()
 	play.systems.setGrounded(play.entities.player, play.world)
-	play.systems.playerMovement(play.entities.player)
 	play.systems.playerControl(play.entities.player)
+	play.systems.playerMovement(play.entities.player)
+	play.systems.gravityUpdate(play.entities.player, play.world)
 	play.systems.velocityUpdate(play.entities.player, play.world)
 	play.systems.worldWrap(play.entities.player)
-	play.systems.gravityUpdate(play.entities.player, play.world)
 	
 	play.draw()
 end
@@ -87,6 +91,7 @@ end
 play.draw = function()
 	play.systems.groundDraw(play.world)
 	play.systems.playerDraw(play.entities.player)
+	play.systems.rotatorDraw(play.entities.player)
 end
 
 return play
