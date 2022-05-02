@@ -15,12 +15,22 @@ play.entities = {
 		pos = { x = 200, y = 120 },
 		rotator = {
 			angle = 0,
-			radius = 16
+			radius = 8,
 		},
-		size = 10,
+		size = 8,
 		speed = 3,
 		vel = { x = 0, y = 0, a = 0 }
 	},
+	rope = {
+		segments = 5,
+		
+	},
+	tiles = {
+		{ pos = {x = 400 / 5 * 1, y = 240 / 2},
+		size = 32},
+		{ pos = {x = 400 / 5 * 4, y = 240 / 2},
+		size = 32}
+	}
 }
 		
 play.systems = {
@@ -35,6 +45,9 @@ play.systems = {
 			if playdate.buttonIsPressed(playdate.kButtonRight) then 
 				e.vel.x = math.min(e.vel.x + e.speed, e.maxSpeed)
 			end
+		end
+		if not playdate.isCrankDocked() then
+			e.rotator.angle = playdate.getCrankPosition()
 		end
 	end,
 	playerMovement = function(e, w)
@@ -63,6 +76,12 @@ play.systems = {
 	end,
 	rotatorDraw = function(e)
 		gfx.drawCircleAtPoint(e.pos.x, e.pos.y, e.rotator.radius)
+		if not playdate.isCrankDocked() then
+			gfx.fillCircleAtPoint((e.pos.x + (e.rotator.radius * math.sin(math.rad(e.rotator.angle)))),(e.pos.y - (e.rotator.radius * math.cos(math.rad(e.rotator.angle)))), 2)
+		end
+	end,
+	tileDraw = function(e)
+		gfx.fillCircleAtPoint(e.pos.x, e.pos.y, e.size / 2)
 	end,
 	groundDraw = function(w)
 		gfx.drawLine(0, w.ground, 400, w.ground)
@@ -92,6 +111,8 @@ play.draw = function()
 	play.systems.groundDraw(play.world)
 	play.systems.playerDraw(play.entities.player)
 	play.systems.rotatorDraw(play.entities.player)
+	
+	__.each(play.entities.tiles, play.systems.tileDraw)
 end
 
 return play
