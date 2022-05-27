@@ -1,9 +1,17 @@
 local normal = {}
+tilesize = 16
 d = 2 -- dot
 p = 3 -- pellet
 
-normal.world = {
+normal = {
 	changed = false,
+	speed = 1,
+	points = 0,
+	lives = 3,
+	time = 300
+}
+
+normal.data = {
 	base = {		
 		layout = {
 			{0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
@@ -23,8 +31,7 @@ normal.world = {
 			{0,1,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1},
 			{0,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
-		},
-		bounds = {}
+		}
 	},
 	initial = {
 		layout = {
@@ -43,60 +50,88 @@ normal.world = {
 			{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
 		}
 	},
-	items = { },
 	itemlocation = {x = 13, y = 9},
-	lives = 3,
 	points = {
 		dot = {10, 20, 30, 40, 50},
 		pellet = 50,
 		ghost = {400, 800, 1200, 1600, 2000, 2400, 2800, 3200}
 	},
-	spawn = {x = 17, y = 14},
-	tilesize = 16,
-	time = 300,
+	spawn = {x = 17, y = 13},
 }
 
 normal.entities = {
-	camera = nil,
-	pacman = nil,
+	bounds = {},
+	pacman = {
+		circle = {},
+		position = {x = 0, y = 0},
+		lastposition = {x = 0, y = 0},
+		size = 1,
+		direction = {x = 1, y = 0},
+		lives = 3,
+		speed = 1
+	},
 	ghosts = {
-		nil,
-		nil,
-		nil,
-		nil
-	}
+		{}, {}, {}, {}
+	},
+	dots = {},
+	pellets = {},
+	items = {}
 }
 		
 normal.systems = {
+	moveEntity = function(entity, world)
+		local pos = entity.position
+		local dir = entity.direction
+		local spd = entity.speed * normal.speed
+		entity.position = {x = pos.x + dir.x * spd, y = pos.y + dir.y * spd}
+		entity.lastposition = pos
+	end,
+	wrapEntity = function(entity, world)
+		local pos = entity.position
+
+	end,
+	centerCamera = function()
+		local pacman = normal.entities.pacman
+		if pacman.lastposition.x == pacman.position.x then return end
+		local target = normal.entities.pacman.position.x
+		local translate = playdate.display.getOffset() - target + 200
+		graphics.setDrawOffset(translate, 0)
+	end,
 	initializeBounds = function(layout, position)
-		local tilesize = normal.world.tilesize
 		local bounds = {}
 		for rowAt, row in pairs(layout) do
 			for colAt, col in pairs(row) do
 				if (col == 1) then
-					table.insert(bounds, geometry.rect.new((colAt + position.x) * tilesize, (rowAt - 2+ position.y) * tilesize, tilesize, tilesize))
+					table.insert(bounds, geometry.rect.new((colAt + position.x) * tilesize, (rowAt - 2 + position.y) * tilesize, tilesize, tilesize))
 					table.insert(bounds, geometry.rect.new(((#row - colAt) + #row) * tilesize, (rowAt - 2 + position.y) * tilesize, tilesize, tilesize))
 				end
 			end
 		end
-		return bounds
+		normal.entities.bounds = bounds
 	end,
 	drawBounds = function(bounds)
-		local tilesize = normal.world.tilesize
-		__.each(bounds, graphics.fillRect)
+		__.each(bounds, graphics.drawRect)
+	end,
+	drawPacMan = function()
+		local position = normal.entities.pacman.position
+		graphics.fillCircleAtPoint(position.x, position.y, tilesize / 2)
 	end
 }
 
 normal.start = function()
-	--playdate.display.setOffset(normal.world.spawn.x * normal.world.tilesize, 0)
-	normal.world.base.bounds = normal.systems.initializeBounds(normal.world.base.layout, {x = 0, y = 0})
+	normal.systems.initializeBounds(normal.data.base.layout, {x = 0, y = 0})
+	normal.entities.pacman.position = {x = tilesize * normal.data.spawn.x + (tilesize / 2), y = tilesize * normal.data.spawn.y - (tilesize / 2)}
+	normal.systems.centerCamera()
 end
 
 normal.draw = function()
-	normal.systems.drawBounds(normal.world.base.bounds)
+	normal.systems.drawBounds(normal.entities.bounds)
+	normal.systems.drawPacMan()
 end
 
 normal.update = function()
+	--__.each(normal.entities, normal.systems.moveEntity)
+	normal.systems.moveEntity(normal.entities.pacman, normal)
 end
 
 

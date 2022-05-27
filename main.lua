@@ -48,7 +48,7 @@ end
 changeScene()
 
 function playdate.update()
-	--gfx.clear()
+	graphics.clear()
 	playdate.drawFPS(0,0)
 	currentScene.update()
 	currentScene.draw()
