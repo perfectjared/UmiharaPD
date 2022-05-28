@@ -69,6 +69,7 @@ normal.entities = {
 		circle = {},
 		cell = {},
 		position = {x = 0, y = 0},
+		futurepositions = {},
 		lastposition = {x = 0, y = 0},
 		size = 1,
 		direction = {x = 1, y = 0},
@@ -95,6 +96,15 @@ normal.systems = {
 			y = pos.y + dir.y * spd
 		}
 		entity.lastposition = pos
+	end,
+	movePacMan = function(pacman, world)
+		normal.systems.moveEntity(pacman, world)
+		for i=0, pacman.turnwindow do
+			pacman.futurepositions[i] = { 
+				x = pacman.position.x + tilesize / 2 + (i * pacman.speed * pacman.direction.x), 
+				y = pacman.position.y + tilesize / 2 + (i * pacman.speed * pacman.direction.y)
+			}
+		end
 	end,
 	wrapEntity = function(entity, world)
 		local pos = entity.position
@@ -151,38 +161,20 @@ normal.systems = {
 			input.x = 0
 		end
 
-		local futurepositions = {}
-		for i=0, pacman.turnwindow do
-			futurepositions[i] = { 
-				x = position.x + tilesize / 2 + (i * pacman.speed * direction.x), 
-				y = position.y + tilesize / 2 + (i * pacman.speed * direction.y)
-			}
-
-			if futurepositions[i].x % tilesize == 0 and futurepositions[i].y % tilesize == 0 
+		for _, position in pairs(pacman.futurepositions) do
+			if position.x % tilesize == 0 and position.y % tilesize == 0 
 			and (input.x ~= 0 or input.y ~= 0) then
-				turnposition = futurepositions[i]
-				nudge.x = pacman.direction.x * i * math.abs(input.y)
-				nudge.y = pacman.direction.y * i * math.abs(input.x)
+				turnposition = position
+				nudge.x = pacman.direction.x * _ * math.abs(input.y)
+				nudge.y = pacman.direction.y * _ * math.abs(input.x)
 				break
 			end
 		end
 
 		if turnposition then
-			local canturn = true
-			local nexttile = { x = turnposition.x + (tilesize * input.x), y = turnposition.y + (tilesize * input.y) }
-			for _, bound in pairs(world.entities.bounds) do
-				local intersect = geometry.rect.fast_intersection(bound.x, bound.y, 1, 1, nexttile.x, nexttile.y, 1, 1)
-				if intersect ~= 0 then
-					canturn = false
-					break
-				end
-			end
-			if canturn == true then
-				print("(" .. input.x .. ", " .. input.y .. ") : (" ..turnposition.x / tilesize .. ", " .. turnposition.y / tilesize .. ") -> (" .. nexttile.x / tilesize .. ", " .. nexttile.y / tilesize .. ")")
-				pacman.position.x += nudge.x
-				pacman.position.y += nudge.y
-				pacman.direction = {x = pacman.input.x, y = pacman.input.y}
-			end
+			pacman.position.x += nudge.x
+			pacman.position.y += nudge.y
+			pacman.direction = {x = pacman.input.x, y = pacman.input.y}
 		end
 
 	end,
@@ -234,7 +226,7 @@ end
 
 normal.update = function()
 	normal.systems.controlPacMan(normal.entities.pacman, normal)
-	normal.systems.moveEntity(normal.entities.pacman, normal)
+	normal.systems.movePacMan(normal.entities.pacman, normal)
 	normal.systems.wrapEntity(normal.entities.pacman, normal)
 	normal.systems.centerCameraOnPacman(normal.entities.pacman)
 end
