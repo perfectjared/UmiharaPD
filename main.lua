@@ -48,10 +48,10 @@ end
 changeScene()
 
 function playdate.update()
-	graphics.clear()
-	playdate.drawFPS(0,0)
 	currentScene.update()
+	graphics.clear()
 	currentScene.draw()
+	playdate.drawFPS(0,0)
 	if nextScene then
 		changeScene()
 	end
