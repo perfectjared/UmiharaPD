@@ -121,14 +121,7 @@ normal.systems = {
 		normal.cameramoved = true
 		graphics.setDrawOffset(translate, 0)
 	end,
-	controlPacMan = function (pacman)
-
-		
-		--[[for _, position in pairs(futurepositions) do
-			print(pacman.position.x, position.x, pacman.position.y, position.y)
-			graphics.drawCircleAtPoint(position.x, position.y, 10) 
-		end]]
-
+	controlPacMan = function (pacman, world)
 		local control = { 
 			up = playdate.buttonIsPressed(playdate.kButtonUp),
 			down = playdate.buttonIsPressed(playdate.kButtonDown),
@@ -136,43 +129,62 @@ normal.systems = {
 			right = playdate.buttonIsPressed(playdate.kButtonRight)
 		}
 
+		local input = pacman.input
+		local direction = pacman.direction
+		local turnposition = nil
+		local nudge = {x = 0, y = 0}
+		local position = pacman.position
 
 		if control.up or control.down then
-			pacman.input.x = 0
-			if control.up then pacman.input.y = -1 elseif control.down then pacman.input.y = 1 end
-			if pacman.direction.y == 1 or pacman.direction.y == -1 then pacman.direction.y = pacman.input.y end
+			input.x = 0
+			if control.up then input.y = -1 elseif control.down then input.y = 1 end
+			if direction.y == 1 or direction.y == -1 then direction.y = input.y end
 		else
-			pacman.input.y = 0
+			input.y = 0
 		end
 
 		if control.left or control.right then
-			pacman.input.y = 0
-			if control.left then pacman.input.x = -1 elseif control.right then pacman.input.x = 1 end
-			if pacman.direction.x == 1 or pacman.direction.x == -1 then pacman.direction.x = pacman.input.x end
+			input.y = 0
+			if control.left then input.x = -1 elseif control.right then input.x = 1 end
+			if direction.x == 1 or direction.x == -1 then direction.x = input.x end
 		else
-			pacman.input.x = 0
+			input.x = 0
 		end
 
 		local futurepositions = {}
 		for i=0, pacman.turnwindow do
-			local dist = i * pacman.speed
 			futurepositions[i] = { 
-				x = pacman.position.x + tilesize / 2 + (i * pacman.speed * pacman.direction.x), 
-				y = pacman.position.y + tilesize / 2 + (i * pacman.speed * pacman.direction.y)
+				x = position.x + tilesize / 2 + (i * pacman.speed * direction.x), 
+				y = position.y + tilesize / 2 + (i * pacman.speed * direction.y)
 			}
+
 			if futurepositions[i].x % tilesize == 0 and futurepositions[i].y % tilesize == 0 
-			and (pacman.input.x ~= 0 or pacman.input.y ~= 0) then
-				print(pacman.input.x, pacman.input.y)
-				
-				--if dir up and turning right or left, pos.y - 
-				--if dir dn and turning rt or lf, pos.y +
-				--if dir right and turning down, position.x +
-				pacman.position.x += (pacman.direction.x * i * math.abs(pacman.input.y))
-				pacman.position.y += (pacman.direction.y * i * math.abs(pacman.input.x))
-				pacman.direction = {x = pacman.input.x, y = pacman.input.y}
+			and (input.x ~= 0 or input.y ~= 0) then
+				turnposition = futurepositions[i]
+				nudge.x = pacman.direction.x * i * math.abs(input.y)
+				nudge.y = pacman.direction.y * i * math.abs(input.x)
 				break
 			end
 		end
+
+		if turnposition then
+			local canturn = true
+			local nexttile = { x = turnposition.x + (tilesize * input.x), y = turnposition.y + (tilesize * input.y) }
+			for _, bound in pairs(world.entities.bounds) do
+				local intersect = geometry.rect.fast_intersection(bound.x, bound.y, 1, 1, nexttile.x, nexttile.y, 1, 1)
+				if intersect ~= 0 then
+					canturn = false
+					break
+				end
+			end
+			if canturn == true then
+				print("(" .. input.x .. ", " .. input.y .. ") : (" ..turnposition.x / tilesize .. ", " .. turnposition.y / tilesize .. ") -> (" .. nexttile.x / tilesize .. ", " .. nexttile.y / tilesize .. ")")
+				pacman.position.x += nudge.x
+				pacman.position.y += nudge.y
+				pacman.direction = {x = pacman.input.x, y = pacman.input.y}
+			end
+		end
+
 	end,
 	initializeBounds = function(layout, world)
 		world.systems.initializeMaze(layout, {x = 0, y = 0}, world)
@@ -206,8 +218,6 @@ normal.systems = {
 	drawPacMan = function(pacman)
 		local position = pacman.position
 		local lastposition = pacman.lastposition
-		graphics.setColor(normal.data.colors.background)
-		graphics.fillCircleAtPoint(lastposition.x, lastposition.y, tilesize / 2)
 		graphics.setColor(normal.data.colors.sprite)
 		graphics.fillCircleAtPoint(position.x, position.y, tilesize / 2)
 	end
@@ -223,7 +233,7 @@ normal.start = function()
 end
 
 normal.update = function()
-	normal.systems.controlPacMan(normal.entities.pacman)
+	normal.systems.controlPacMan(normal.entities.pacman, normal)
 	normal.systems.moveEntity(normal.entities.pacman, normal)
 	normal.systems.wrapEntity(normal.entities.pacman, normal)
 	normal.systems.centerCameraOnPacman(normal.entities.pacman)
