@@ -18,8 +18,8 @@ normal.data = {
 		sprite = graphics.kColorWhite,
 		clear = graphics.kColorClear
 	},
-	base = {		
-		layout = {
+	layout = {
+		bounds = {
 			{0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
 			{0,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0},
 			{0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
@@ -37,22 +37,24 @@ normal.data = {
 			{0,1,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1},
 			{0,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
-		}
-	},
-	pattern = {
-		{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
-		{1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0},
-		{1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0},
-		{1, 1, 1, 1, 0, 1, 1, 1, 0, 1, d},
-		{1, 1, 1, 1, 0, 0, 0, 0, 0, 1, d},
-		{1, 1, 1, 1, 0, 1, 0, 1, 1, 1, d},
-		{0, 0, 0, 0, 0, 1, 0, 1, d, p, 0},
-		{1, 1, 1, 1, 0, 1, 0, 1, d, 1, d},
-		{1, 1, 1, 1, 0, 0, 0, 0, d, 1, d},
-		{1, 1, 1, 1, 0, 1, 1, 1, d, 1, d},
-		{1, 1, 1, 1, 0, 0, 0, 1, d, d, d},
-		{1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0},
-		{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+		},
+		initial = {
+			{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+			{1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0},
+			{1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0},
+			{1, 1, 1, 1, 0, 1, 1, 1, 0, 1, d},
+			{1, 1, 1, 1, 0, 0, 0, 0, 0, 1, d},
+			{1, 1, 1, 1, 0, 1, 0, 1, 1, 1, d},
+			{0, 0, 0, 0, 0, 1, 0, 1, d, p, 0},
+			{1, 1, 1, 1, 0, 1, 0, 1, d, 1, d},
+			{1, 1, 1, 1, 0, 0, 0, 0, d, 1, d},
+			{1, 1, 1, 1, 0, 1, 1, 1, d, 1, d},
+			{1, 1, 1, 1, 0, 0, 0, 1, d, d, d},
+			{1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0},
+			{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0}
+		},
+		left = { layout = {}, position = { x = 2, y = 2}},
+		right = { layout = {}, position = { x = 20, y = 2}},
 	},
 	itemlocation = {x = 13, y = 9},
 	points = {
@@ -87,6 +89,30 @@ normal.entities = {
 }
 		
 normal.systems = {
+	mirrorMatrix = function(matrix)
+		local mirror = {}
+		for i = 1, #matrix do
+			mirror[i] = {}
+			for r = #matrix[i], 1, -1 do
+				table.insert(mirror[i], matrix[i][r])
+			end
+		end
+		for _, row in pairs(matrix) do
+			local text = ""
+			for ___, entry in pairs(row) do
+				text = text .. entry .. " "
+			end
+			print(text)
+		end
+		for _, row in pairs(mirror) do
+			local text = ""
+			for ___, entry in pairs(row) do
+				text = text .. entry .. " "
+			end
+			print(text)
+		end
+		return mirror	
+	end,
 	moveEntity = function(entity, world)
 		local pos = entity.position
 		local dir = entity.direction
@@ -180,6 +206,7 @@ normal.systems = {
 	end,
 	initializeBounds = function(layout, world)
 		world.systems.initializeMaze(layout, {x = 0, y = 0}, world)
+		world.systems.initializeMaze(world.systems.mirrorMatrix(layout), {x = #layout[1] - 1, y = 0}, world)
 		world.boundaries = {
 			{x = 0, y = 0},
 			{x = ((#layout[1] * 2) - 1) * tilesize, 
@@ -187,14 +214,14 @@ normal.systems = {
 		}
 	end,
 	initializeMaze = function(layout, position, world)
+		local mirror = world.systems.mirrorMatrix(layout)
 		local bounds = {}
-		local rows = #world.data.base.layout
-		local cols = #world.data.base.layout[1]
+		local rows = #world.data.layout.bounds
+		local cols = #world.data.layout.bounds[1]
 		for rowAt, row in pairs(layout) do
 			for colAt, col in pairs(row) do
 				if (col == 1) then
 					table.insert(bounds, geometry.rect.new((colAt + position.x) * tilesize, (rowAt - 2 + position.y) * tilesize, tilesize, tilesize))
-					table.insert(bounds, geometry.rect.new(((rows - colAt - position.x) + rows) * tilesize, (rowAt - 2 + position.y) * tilesize, tilesize, tilesize))
 				end
 			end
 		end
@@ -217,8 +244,9 @@ normal.systems = {
 
 normal.start = function()
 	graphics.setBackgroundColor(graphics.kColorBlack)
-	normal.systems.initializeBounds(normal.data.base.layout, normal)
-	normal.systems.initializeMaze(normal.data.pattern, {x = 2, y = 2}, normal)
+	normal.systems.initializeBounds(normal.data.layout.bounds, normal)
+	normal.data.layout.left.layout = normal.systems.initializeMaze(normal.data.layout.initial, normal.data.layout.left.position, normal)
+	normal.data.layout.right.layout = normal.systems.initializeMaze(normal.systems.mirrorMatrix(normal.data.layout.initial), normal.data.layout.right.position, normal)
 	normal.entities.pacman.position = {x = tilesize * normal.data.spawn.x + (tilesize / 2), y = tilesize * normal.data.spawn.y - (tilesize / 2)}
 	normal.systems.centerCameraOnPacman(normal.entities.pacman)
 	normal.systems.drawBounds(normal.entities.bounds)
