@@ -19,42 +19,49 @@ normal.data = {
 		clear = graphics.kColorClear
 	},
 	layout = {
-		bounds = {
-			{0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
-			{0,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0},
-			{0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
-			{0,1,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1},
-			{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0},
-			{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-			{1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-			{0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-			{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0},
-			{0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0},
-			{0,1,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1},
-			{0,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
+		boundaries = {
+			matrix = {
+				{0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
+				{0,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0},
+				{0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
+				{0,1,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1},
+				{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0},
+				{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
+				{1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
+				{0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
+				{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0},
+				{0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0},
+				{0,1,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1},
+				{0,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
+			},
+			position = {x = 0, y = 0}
+		
 		},
-		initial = {
-			{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
-			{1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0},
-			{1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0},
-			{1, 1, 1, 1, 0, 1, 1, 1, 0, 1, d},
-			{1, 1, 1, 1, 0, 0, 0, 0, 0, 1, d},
-			{1, 1, 1, 1, 0, 1, 0, 1, 1, 1, d},
-			{0, 0, 0, 0, 0, 1, 0, 1, d, p, 0},
-			{1, 1, 1, 1, 0, 1, 0, 1, d, 1, d},
-			{1, 1, 1, 1, 0, 0, 0, 0, d, 1, d},
-			{1, 1, 1, 1, 0, 1, 1, 1, d, 1, d},
-			{1, 1, 1, 1, 0, 0, 0, 1, d, d, d},
-			{1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0},
-			{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0}
+		current = {
+			matrix = {
+				{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+				{1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0},
+				{1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0},
+				{1, 1, 1, 1, 0, 1, 1, 1, 0, 1, d},
+				{1, 1, 1, 1, 0, 0, 0, 0, 0, 1, d},
+				{1, 1, 1, 1, 0, 1, 0, 1, 1, 1, d},
+				{0, 0, 0, 0, 0, 1, 0, 1, d, p, 0},
+				{1, 1, 1, 1, 0, 1, 0, 1, d, 1, d},
+				{1, 1, 1, 1, 0, 0, 0, 0, d, 1, d},
+				{1, 1, 1, 1, 0, 1, 1, 1, d, 1, d},
+				{1, 1, 1, 1, 0, 0, 0, 1, d, d, d},
+				{1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0},
+				{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0}
+			},
+			position = {x = 0, y = 0}
 		},
-		left = { layout = {}, position = { x = 2, y = 2}},
-		right = { layout = {}, position = { x = 20, y = 2}},
+		left = {matrix = {}, position = {x = 2, y = 2}},
+		right = {matrix = {}, position = {x = 20, y = 2}},
 	},
 	itemlocation = {x = 13, y = 9},
 	points = {
@@ -66,7 +73,11 @@ normal.data = {
 }
 
 normal.entities = {
-	bounds = {},
+	bounds = {
+		base = {},
+		left = {},
+		right = {}
+	},
 	pacman = {
 		circle = {},
 		cell = {},
@@ -74,7 +85,7 @@ normal.entities = {
 		futurepositions = {},
 		lastposition = {x = 0, y = 0},
 		size = 1,
-		direction = {x = 1, y = 0},
+		direction = {x = -1, y = 0},
 		input = {x = 0, y = 0},
 		lives = 3,
 		speed = 1,
@@ -91,6 +102,7 @@ normal.entities = {
 normal.systems = {
 	mirrorMatrix = function(matrix)
 		local mirror = {}
+
 		for i = 1, #matrix do
 			mirror[i] = {}
 			for r = #matrix[i], 1, -1 do
@@ -102,16 +114,23 @@ normal.systems = {
 			for ___, entry in pairs(row) do
 				text = text .. entry .. " "
 			end
-			print(text)
 		end
 		for _, row in pairs(mirror) do
 			local text = ""
 			for ___, entry in pairs(row) do
 				text = text .. entry .. " "
 			end
-			print(text)
 		end
-		return mirror	
+		return mirror
+	end,
+	mirrorPosition = function(position, world)
+		local mirror = {x = 0, y =0} and {x = 0, y = 0} or {x = ((#world.data.boundaries.matrix[1] * 2) - 1) - 1, y = 0}
+		return mirror
+	end,
+	mirrorLayout = function(layout, world)
+		local mirrormtx = world.systems.mirrorMatrix(layout.matrix)
+		local mirrorpos = world.systems.mirrorPosition(layout.position, world)
+		return {matrix = mirrormtx, position = mirrorpos}
 	end,
 	moveEntity = function(entity, world)
 		local pos = entity.position
@@ -124,7 +143,7 @@ normal.systems = {
 		entity.lastposition = pos
 	end,
 	movePacMan = function(pacman, world)
-		normal.systems.moveEntity(pacman, world)
+		world.systems.moveEntity(pacman, world)
 		for i=0, pacman.turnwindow do
 			pacman.futurepositions[i] = { 
 				x = pacman.position.x + tilesize / 2 + (i * pacman.speed * pacman.direction.x), 
@@ -144,9 +163,6 @@ normal.systems = {
 		elseif pos.y > boundaries[2].y then
 			entity.position.y = boundaries[1].y
 		end
-	end,
-	initializePacMan = function(pacman)
-
 	end,
 	centerCameraOnPacman = function(pacman)
 		if pacman.lastposition.x == pacman.position.x then 
@@ -202,54 +218,63 @@ normal.systems = {
 			pacman.position.y += nudge.y
 			pacman.direction = {x = pacman.input.x, y = pacman.input.y}
 		end
-
 	end,
-	initializeBounds = function(layout, world)
-		world.systems.initializeMaze(layout, {x = 0, y = 0}, world)
-		world.systems.initializeMaze(world.systems.mirrorMatrix(layout), {x = #layout[1] - 1, y = 0}, world)
+	initializeBoundaries = function(layout, world)
 		world.boundaries = {
 			{x = 0, y = 0},
-			{x = ((#layout[1] * 2) - 1) * tilesize, 
-			y = #layout * tilesize}
+			{x = ((#layout.matrix[1] * 2) - 1) * tilesize, 
+			y = #layout.matrix * tilesize}
 		}
+		world.systems.initializeLayout(layout, world)
+		world.systems.initializeLayout(world.systems.mirrorLayout(layout, world), world)
 	end,
-	initializeMaze = function(layout, position, world)
-		local mirror = world.systems.mirrorMatrix(layout)
+	addLayouts = function(l1, l2)
+		print(l1.position.x, l1.position.y)
+		print(l2.position.x, l2.position.y)
+		local m3 = { layout = {}, position = 
+			{x = math.min(l1.position.x, l2.position.y), 
+			y = math.min(l1.position.y, l2.position.y)}}
+
+		local rows = math.max(#l1.matrix, #l2.matrix)
+		local cols = math.max(#l1.matrix[1], #l2.matrix[1])
+	end,
+	initializeLayout = function(layout, world)
 		local bounds = {}
-		local rows = #world.data.layout.bounds
-		local cols = #world.data.layout.bounds[1]
+		local rows = #layout.matrix
+		local cols = layout.matrix[1] ~= nil and #layout.matrix[1] or 0
+		local pos = layout.position
 		for rowAt, row in pairs(layout) do
 			for colAt, col in pairs(row) do
 				if (col == 1) then
-					table.insert(bounds, geometry.rect.new((colAt + position.x) * tilesize, (rowAt - 2 + position.y) * tilesize, tilesize, tilesize))
+					table.insert(bounds, geometry.rect.new((colAt + data.position.x) * tilesize, (rowAt - 2 + data.position.y) * tilesize, tilesize, tilesize))
 				end
 			end
 		end
 		for _, entity in pairs(bounds) do
 			table.insert(world.entities.bounds, entity)
 		end
+		world.data.layout.current = world.systems.addLayouts(world.data.layout.current, layout)
 	end,
 	drawBounds = function(bounds)
-		graphics.setColor(normal.data.colors.sprite)
+		graphics.setColor(world.data.colors.sprite)
 		__.each(bounds, graphics.fillRect)
-		normal.cameramoved = false
+		world.cameramoved = false
 	end,
-	drawPacMan = function(pacman)
+	drawPacMan = function(pacman, world)
 		local position = pacman.position
 		local lastposition = pacman.lastposition
-		graphics.setColor(normal.data.colors.sprite)
+		graphics.setColor(world.data.colors.sprite)
 		graphics.fillCircleAtPoint(position.x, position.y, tilesize / 2)
 	end
 }
 
 normal.start = function()
 	graphics.setBackgroundColor(graphics.kColorBlack)
-	normal.systems.initializeBounds(normal.data.layout.bounds, normal)
-	normal.data.layout.left.layout = normal.systems.initializeMaze(normal.data.layout.initial, normal.data.layout.left.position, normal)
-	normal.data.layout.right.layout = normal.systems.initializeMaze(normal.systems.mirrorMatrix(normal.data.layout.initial), normal.data.layout.right.position, normal)
+	normal.systems.initializeBoundaries(normal.data.layout.boundaries, normal)
+	normal.systems.initializeLayout(normal.data.layout.current.layout, normal)
+	normal.systems.initializeLayout(normal.systems.mirrorMatrix(normal.data.layout.current.layout), normal)
 	normal.entities.pacman.position = {x = tilesize * normal.data.spawn.x + (tilesize / 2), y = tilesize * normal.data.spawn.y - (tilesize / 2)}
 	normal.systems.centerCameraOnPacman(normal.entities.pacman)
-	normal.systems.drawBounds(normal.entities.bounds)
 end
 
 normal.update = function()
@@ -258,7 +283,6 @@ normal.update = function()
 	normal.systems.wrapEntity(normal.entities.pacman, normal)
 	normal.systems.centerCameraOnPacman(normal.entities.pacman)
 end
-
 
 normal.draw = function()
 	normal.systems.drawBounds(normal.entities.bounds)
