@@ -226,11 +226,10 @@ normal.systems = {
 			y = #layout.matrix * tilesize}
 		}
 		world.systems.initializeLayout(layout, world)
-		world.systems.initializeLayout(world.systems.mirrorLayout(layout, world), world)
+		local mirror = world.systems.mirrorLayout(layout, world)
+		world.systems.initializeLayout(mirror, world)
 	end,
 	addLayouts = function(l1, l2)
-		print(l1.position.x, l1.position.y)
-		print(l2.position.x, l2.position.y)
 		local m3 = { layout = {}, position = 
 			{x = math.min(l1.position.x, l2.position.y), 
 			y = math.min(l1.position.y, l2.position.y)}}
@@ -253,6 +252,7 @@ normal.systems = {
 		for _, entity in pairs(bounds) do
 			table.insert(world.entities.bounds, entity)
 		end
+		
 		world.data.layout.current = world.systems.addLayouts(world.data.layout.current, layout)
 	end,
 	drawBounds = function(bounds)
